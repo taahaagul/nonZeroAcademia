@@ -20,6 +20,7 @@ import com.taahaagul.security.entities.User;
 import com.taahaagul.security.repos.UserRepository;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -46,6 +47,7 @@ public class AuthenticationService {
                 .userName(request.getUserName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .memberSince(new Date())
                 .role(Role.USER)
                 .build();
         var savedUser = repository.save(user);

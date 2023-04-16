@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,14 +23,15 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String userName;
     private String email;
     private String password;
-
+    private String aboutMe;
+    private String gitHub;
+    private Date memberSince;
     @Enumerated(EnumType.STRING)
     private Role role;
-
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
@@ -40,6 +42,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     @Override
