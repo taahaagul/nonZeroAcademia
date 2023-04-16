@@ -13,4 +13,6 @@ public class UserUpdateRequest {
     String userName;
     String aboutMe;
     String gitHub;
+    String oldPasw;
+    String newPasw;
 }

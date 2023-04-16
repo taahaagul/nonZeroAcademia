@@ -2,36 +2,30 @@ package com.taahaagul.security.controller;
 
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
-import com.taahaagul.security.requests.UserUpdateRequest;
 import com.taahaagul.security.responses.UserResponse;
 import com.taahaagul.security.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/nonzero")
 @RequiredArgsConstructor
-public class UserContoller {
+public class nonZeroController {
 
     private final UserService userService;
 
     @GetMapping
-    public UserResponse getAuthenticateUser(){
-        User user = userService.getAuthenticateUser();
-        if(user == null)
-            throw new UserNotFoundException();
-
-        return new UserResponse(user);
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers().stream().map(u -> new UserResponse(u)).toList();
     }
 
-    @PutMapping()
-    public UserResponse updateOneUser(@RequestBody UserUpdateRequest request) {
-        User user = userService.updateOneUser(request);
+    @GetMapping("/{userId}")
+    public UserResponse getOneUser(@PathVariable Long userId) {
+        User user = userService.getOneUserById(userId);
         if(user == null)
             throw new UserNotFoundException();
 
