@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateRequest {
-    private String userName;
-    private String aboutMe;
-    private String gitHub;
+public class UserChangePaswRequest {
+    private String oldPasw;
+    private String newPasw;
 }
