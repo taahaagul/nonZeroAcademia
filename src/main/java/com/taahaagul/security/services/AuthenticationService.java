@@ -1,7 +1,8 @@
 package com.taahaagul.security.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.taahaagul.security.requests.AuthenticationRequest;
+import com.taahaagul.security.exceptions.UserNotFoundException;
+import com.taahaagul.security.requests.LoginRequest;
 import com.taahaagul.security.responses.AuthenticationResponse;
 import com.taahaagul.security.requests.RegisterRequest;
 import com.taahaagul.security.config.JwtService;
@@ -37,10 +38,7 @@ public class AuthenticationService {
 
         Optional<User> existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            return AuthenticationResponse.builder()
-                    .accessToken("Username already in use.")
-                    .refreshToken("Username already in use.")
-                    .build();
+            throw new UserNotFoundException("Email already exist!");
         }
 
         var user = User.builder()
@@ -48,7 +46,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .memberSince(new Date())
-                .role(Role.USER)
+                .role(Role.ZERO)
                 .build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -60,7 +58,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -91,6 +89,7 @@ public class AuthenticationService {
     }
 
     private void revokeAllUserTokens(User user) {
+        /*
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
@@ -99,6 +98,11 @@ public class AuthenticationService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
+         */
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        tokenRepository.deleteAll(validUserTokens);
     }
 
     public void refreshToken(

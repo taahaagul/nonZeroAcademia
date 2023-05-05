@@ -1,6 +1,6 @@
 package com.taahaagul.security.controller;
 
-import com.taahaagul.security.requests.AuthenticationRequest;
+import com.taahaagul.security.requests.LoginRequest;
 import com.taahaagul.security.requests.RegisterRequest;
 import com.taahaagul.security.responses.AuthenticationResponse;
 import com.taahaagul.security.services.AuthenticationService;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -29,14 +29,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @RequestBody LoginRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh/token")
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
