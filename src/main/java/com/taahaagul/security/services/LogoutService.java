@@ -1,5 +1,7 @@
 package com.taahaagul.security.services;
 
+import com.taahaagul.security.entities.User;
+import com.taahaagul.security.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +31,14 @@ public class LogoutService implements LogoutHandler {
         var storedToken = tokenRepository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
+            /*
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
+             */
+            tokenRepository.delete(storedToken);
             SecurityContextHolder.clearContext();
-        }
+        } else
+            throw new UserNotFoundException("Token is not found!");
     }
 }

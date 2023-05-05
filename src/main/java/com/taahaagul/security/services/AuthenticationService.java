@@ -1,7 +1,9 @@
 package com.taahaagul.security.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.taahaagul.security.entities.*;
 import com.taahaagul.security.exceptions.UserNotFoundException;
+import com.taahaagul.security.repos.VerificationTokenRepository;
 import com.taahaagul.security.requests.LoginRequest;
 import com.taahaagul.security.responses.AuthenticationResponse;
 import com.taahaagul.security.requests.RegisterRequest;
@@ -11,32 +13,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.taahaagul.security.entities.Token;
 import com.taahaagul.security.repos.TokenRepository;
-import com.taahaagul.security.entities.TokenType;
-import com.taahaagul.security.entities.Role;
-import com.taahaagul.security.entities.User;
 import com.taahaagul.security.repos.UserRepository;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final MailService mailService;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
 
-        Optional<User> existingUser = repository.findByEmail(request.getEmail());
+        Optional<User> existingUsername = userRepository.findByUserName(request.getUserName());
+        if(existingUsername.isPresent())
+            throw new UserNotFoundException("Username already is exist");
+
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new UserNotFoundException("Email already exist!");
         }
@@ -47,15 +53,39 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .memberSince(new Date())
                 .role(Role.ZERO)
+                .enabled(false)
                 .build();
-        var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        userRepository.save(user);
+
+        String token = generateVerificationToken(user);
+        mailService.sendMail(new NotificationEmail("Please Activate your Account",
+                user.getEmail(), "Thank you for signing up to Spring Reddit, " +
+                "please click on the below url to activate your account : " +
+                "http://localhost:8080/api/auth/accountVerification/" + token));
+    }
+
+    public String generateVerificationToken(User user) {
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        verificationToken.setCreated(new Date());
+
+        verificationTokenRepository.save(verificationToken);
+        return token;
+    }
+
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        fetchUserAndEnable(verificationToken.orElseThrow(() -> new UserNotFoundException("Invalid Token")));
+    }
+
+    private void fetchUserAndEnable(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+        User  user = userRepository.findByEmail(username)
+                .orElseThrow(()-> new UserNotFoundException("User not found with name -" + username));
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 
     public AuthenticationResponse authenticate(LoginRequest request) {
@@ -65,7 +95,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -118,7 +148,7 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
+            var user = this.userRepository.findByEmail(userEmail)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
@@ -131,5 +161,11 @@ public class AuthenticationService {
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
+    }
+
+    public User getCurrentUser() {
+        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new UserNotFoundException("Current user is not found"));
+        return user;
     }
 }

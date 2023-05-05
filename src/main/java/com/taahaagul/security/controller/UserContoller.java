@@ -1,51 +1,47 @@
 package com.taahaagul.security.controller;
 
-import com.taahaagul.security.entities.User;
-import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
 import com.taahaagul.security.responses.UserResponse;
+import com.taahaagul.security.services.ThumbnailService;
 import com.taahaagul.security.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/BATG/user")
 @RequiredArgsConstructor
 public class UserContoller {
 
     private final UserService userService;
+    private final ThumbnailService thumbnailService;
 
     @GetMapping
-    public UserResponse getAuthenticateUser(){
-        User user = userService.getAuthenticateUser();
-        if(user == null)
-            throw new UserNotFoundException();
-
-        return new UserResponse(user);
+    public ResponseEntity<UserResponse>  getAuthenticateUser(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getAuthenticateUser());
     }
 
     @PutMapping()
     public ResponseEntity<UserResponse> updateOneUser(@RequestBody UserUpdateRequest request) {
-        User user = userService.updateOneUser(request);
-        if(user == null)
-            throw new UserNotFoundException();
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updateAuthenticateUser(request));
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<UserResponse> changePassword(@RequestBody UserChangePaswRequest request) {
-        User user = userService.changePassword(request);
-        if(user == null)
-            throw new UserNotFoundException();
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user));
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePaswRequest request) {
+        userService.changePassword(request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body("Change Password Successfully");
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    private void handleUserNotFound() {}
+    @PostMapping("/thumbnail")
+    public ResponseEntity<String> changeThumbnail(@RequestParam("file")MultipartFile file) {
+        thumbnailService.uploadThumbnail(file);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Thumbnail Uploaded Successfully");
+    }
 }

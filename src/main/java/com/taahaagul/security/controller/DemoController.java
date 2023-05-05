@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/demo-controller")
 public class DemoController {
-
     @GetMapping
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.status(HttpStatus.OK).body("TG");

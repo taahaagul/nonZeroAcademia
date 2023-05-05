@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/v1/demo-controller/**").hasAuthority("ADMIN")
+                .requestMatchers("/BATG/nonzero/**").hasAuthority("ZERO")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

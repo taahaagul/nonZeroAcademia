@@ -1,17 +1,17 @@
 package com.taahaagul.security.services;
 
 import com.taahaagul.security.entities.User;
+import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repos.UserRepository;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
+import com.taahaagul.security.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,57 +19,45 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+       List<User> list = userRepository.findAll();
+       return list.stream()
+               .map(user -> new UserResponse(user))
+               .collect(Collectors.toList());
     }
 
-    public User getOneUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public UserResponse getOneUser(Long userId) {
+       User user = userRepository.findById(userId)
+               .orElseThrow(() -> new UserNotFoundException("User not found!"));
+       return new UserResponse(user);
     }
 
-    public User getAuthenticateUser() {
-        Optional<User> user = userRepository
-                .findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(user.isPresent()){
-            User authenticateUser = user.get();
-            return authenticateUser;
-        }
-        else
-            return null;
+    public UserResponse getAuthenticateUser() {
+        User currentUser = authenticationService.getCurrentUser();
+        return new UserResponse(currentUser);
     }
 
-    public User updateOneUser(UserUpdateRequest newUser) {
-        Optional<User> user = userRepository
-                .findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(user.isPresent()) {
-            User foundUser = user.get();
-            if(newUser.getUserName() != null)
-                foundUser.setUserName(newUser.getUserName());
-            if(newUser.getAboutMe() != null)
-                foundUser.setAboutMe(newUser.getAboutMe());
-            if(newUser.getGitHub() != null)
-                foundUser.setGitHub(newUser.getGitHub());
+    public UserResponse updateAuthenticateUser(UserUpdateRequest request) {
+       User currentUser = authenticationService.getCurrentUser();
+       currentUser.setFirstName(request.getFirstName());
+       currentUser.setLastName(request.getLastName());
+       currentUser.setAboutMe(request.getAboutMe());
+       currentUser.setGitHub(request.getGitHub());
+       currentUser.setEducation(request.getEducation());
+       currentUser.setCity(request.getCity());
+       currentUser.setLinkedin(request.getLinkedin());
+       userRepository.save(currentUser);
+       return new UserResponse(currentUser);
+    }
 
-            userRepository.save(foundUser);
-            return foundUser;
+    public void changePassword(UserChangePaswRequest request) {
+        User user = authenticationService.getCurrentUser();
+        if(passwordEncoder.matches(request.getOldPasw(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(request.getNewPasw()));
+            userRepository.save(user);
         } else
-            return null;
-    }
-
-    public User changePassword(UserChangePaswRequest request) {
-        Optional<User> user = userRepository
-                .findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(user.isPresent()) {
-            User foundUser = user.get();
-            if (request.getOldPasw() != null && request.getNewPasw() != null) {
-                if (passwordEncoder.matches(request.getOldPasw(), foundUser.getPassword())) {
-                    foundUser.setPassword(passwordEncoder.encode(request.getNewPasw()));
-                    userRepository.save(foundUser);
-                    return foundUser;
-                }
-            }
-        }
-        return null;
+            throw new UserNotFoundException("Password unmatched!");
     }
 }

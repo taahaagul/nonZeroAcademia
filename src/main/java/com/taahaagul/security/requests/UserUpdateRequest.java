@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequest {
-    private String userName;
+    private String firstName;
+    private String lastName;
     private String aboutMe;
     private String gitHub;
+    private String education;
+    private String city;
+    private String linkedin;
 }

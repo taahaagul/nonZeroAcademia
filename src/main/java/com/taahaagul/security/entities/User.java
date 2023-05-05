@@ -24,12 +24,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Long id;
+    private String firstName;
+    private String lastName;
     private String userName;
     private String email;
     private String password;
     private String aboutMe;
+    private String education;
+    private String city;
     private String gitHub;
+    private String linkedin;
     private Date memberSince;
+    private String thumbnailUrl;
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user")

@@ -19,20 +19,14 @@ public class nonZeroController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers().stream().map(u -> new UserResponse(u)).toList();
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getAllUsers());
     }
 
     @GetMapping("/{userId}")
-    public UserResponse getOneUser(@PathVariable Long userId) {
-        User user = userService.getOneUserById(userId);
-        if(user == null)
-            throw new UserNotFoundException();
-
-        return new UserResponse(user);
+    public ResponseEntity<UserResponse> getOneUser(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getOneUser(userId));
     }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    private void handleUserNotFound() {}
 }
