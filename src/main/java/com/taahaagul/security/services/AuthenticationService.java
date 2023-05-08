@@ -69,10 +69,11 @@ public class AuthenticationService {
 
     public String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUser(user);
-        verificationToken.setCreated(new Date());
+        VerificationToken verificationToken = VerificationToken.builder()
+                .token(token)
+                .user(user)
+                .created(new Date())
+                .build();
 
         verificationTokenRepository.save(verificationToken);
         return token;
@@ -104,8 +105,6 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        System.out.println(jwtToken);
-        System.out.println(refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)

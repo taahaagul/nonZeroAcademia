@@ -19,7 +19,6 @@ public class UserResponse {
     String city;
     String gitHub;
     String linkedin;
-    String role;
     String thumbnail;
 
     public UserResponse(User entity) {
@@ -34,7 +33,6 @@ public class UserResponse {
         this.city = entity.getCity();
         this.gitHub = entity.getGitHub();
         this.linkedin = entity.getLinkedin();
-        this.role = entity.getRole().toString();
         this.thumbnail = entity.getThumbnailUrl();
     }
 }
