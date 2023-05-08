@@ -1,6 +1,5 @@
 package com.taahaagul.security.services;
 
-import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-import com.taahaagul.security.repos.TokenRepository;
+import com.taahaagul.security.repository.TokenRepository;
 
 @Service
 @RequiredArgsConstructor

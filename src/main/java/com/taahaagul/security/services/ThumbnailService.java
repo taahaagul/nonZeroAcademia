@@ -1,7 +1,7 @@
 package com.taahaagul.security.services;
 
 import com.taahaagul.security.entities.User;
-import com.taahaagul.security.repos.UserRepository;
+import com.taahaagul.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

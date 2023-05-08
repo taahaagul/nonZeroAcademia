@@ -1,4 +1,4 @@
-package com.taahaagul.security.repos;
+package com.taahaagul.security.repository;
 
 import com.taahaagul.security.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

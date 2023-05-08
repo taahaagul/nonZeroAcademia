@@ -1,4 +1,4 @@
-package com.taahaagul.security.controller;
+package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.requests.LoginRequest;
 import com.taahaagul.security.requests.RegisterRequest;

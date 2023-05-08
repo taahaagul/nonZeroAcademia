@@ -2,7 +2,7 @@ package com.taahaagul.security.services;
 
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
-import com.taahaagul.security.repos.UserRepository;
+import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
 import com.taahaagul.security.responses.UserResponse;

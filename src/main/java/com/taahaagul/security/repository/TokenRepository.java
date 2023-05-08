@@ -1,4 +1,4 @@
-package com.taahaagul.security.repos;
+package com.taahaagul.security.repository;
 
 import java.util.List;
 import java.util.Optional;

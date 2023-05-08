@@ -1,7 +1,5 @@
-package com.taahaagul.security.controller;
+package com.taahaagul.security.controllers;
 
-import com.taahaagul.security.entities.User;
-import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.responses.UserResponse;
 import com.taahaagul.security.services.UserService;
 import lombok.RequiredArgsConstructor;
