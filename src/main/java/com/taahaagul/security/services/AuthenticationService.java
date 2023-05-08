@@ -38,8 +38,8 @@ public class AuthenticationService {
 
     public void register(RegisterRequest request) {
 
-        Optional<User> existingUsername = userRepository.findByUserName(request.getUserName());
-        if(existingUsername.isPresent())
+        Optional<User> existingUserName = userRepository.findByUserName(request.getUserName());
+        if(existingUserName.isPresent())
             throw new UserNotFoundException("Username already is exist");
 
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
@@ -53,6 +53,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .memberSince(new Date())
                 .role(Role.ZERO)
+                .thumbnailUrl("https://taahaagul.s3.amazonaws.com/c7185a1b-4f26-4ad4-b5e8-11fa411dccdb.jpeg")
                 .enabled(false)
                 .build();
         userRepository.save(user);
@@ -101,6 +102,8 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+        System.out.println(jwtToken);
+        System.out.println(refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
