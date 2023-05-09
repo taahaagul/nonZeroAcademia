@@ -16,13 +16,6 @@ import java.util.List;
 public class SectionController {
 
     private final SectionService sectionService;
-
-    @GetMapping("/{name}")
-    public ResponseEntity<List<SectionResponse>> getAllSection(@PathVariable String name) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sectionService.getAllSection(name));
-    }
-
     @PostMapping
     public ResponseEntity<String> createOneSection(@RequestBody SectionRequest request) {
         sectionService.createOneSection(request);

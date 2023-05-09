@@ -44,4 +44,11 @@ public class UserContoller {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Thumbnail Uploaded Successfully");
     }
+
+    @PutMapping("/one")
+    public ResponseEntity<String> zeroToOne() {
+        userService.zeroToOne();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Zero to One");
+    }
 }

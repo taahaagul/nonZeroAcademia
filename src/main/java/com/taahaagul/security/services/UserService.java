@@ -1,5 +1,6 @@
 package com.taahaagul.security.services;
 
+import com.taahaagul.security.entities.Role;
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.UserRepository;
@@ -59,5 +60,11 @@ public class UserService {
             userRepository.save(user);
         } else
             throw new UserNotFoundException("Password unmatched!");
+    }
+
+    public void zeroToOne() {
+        User user = authenticationService.getCurrentUser();
+        user.setRole(Role.ONE);
+        userRepository.save(user);
     }
 }
