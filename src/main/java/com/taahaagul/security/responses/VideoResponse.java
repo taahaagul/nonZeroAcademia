@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class VideoResponse {
     private Integer id;
+    private Integer capsulId;
+    private Integer sectionId;
     private Integer videoSequence;
     private String videoUrl;
     private String title;
@@ -14,6 +16,8 @@ public class VideoResponse {
 
     public VideoResponse (Video entity) {
         this.id = entity.getId();
+        this.capsulId = entity.getCapsul().getId();
+        this.sectionId = entity.getSection().getId();
         this.videoSequence = entity.getVideoSequence();
         this.title = entity.getTitle();
         this.videoUrl = entity.getVideoUrl();
