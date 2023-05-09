@@ -7,6 +7,7 @@ import com.taahaagul.security.repository.CapsulRepository;
 import com.taahaagul.security.repository.SectionRepository;
 import com.taahaagul.security.requests.SectionRequest;
 import com.taahaagul.security.responses.SectionResponse;
+import com.taahaagul.security.responses.VideoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class SectionService {
 
     private final SectionRepository sectionRepository;
     private final CapsulRepository capsulRepository;
+    private final VideoService videoService;
     public void createOneSection(SectionRequest request) {
         Capsul capsul = capsulRepository.findByName(request.getCapsulName())
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
@@ -37,8 +39,8 @@ public class SectionService {
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
 
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
-        return list.stream()
-                .map(section -> new SectionResponse(section))
-                .collect(Collectors.toList());
+        return list.stream().map(s -> {
+            List<VideoResponse> videos = videoService.getSectionVideo(name, s.getSectionSequence());
+            return new SectionResponse(s, videos);}).collect(Collectors.toList());
     }
 }
