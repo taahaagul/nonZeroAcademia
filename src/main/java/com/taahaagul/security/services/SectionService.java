@@ -40,7 +40,7 @@ public class SectionService {
 
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
         return list.stream().map(s -> {
-            List<VideoResponse> videos = videoService.getSectionVideo(name, s.getSectionSequence());
+            List<VideoResponse> videos = videoService.getSectionVideos(name, s.getSectionSequence());
             return new SectionResponse(s, videos);}).collect(Collectors.toList());
     }
 }

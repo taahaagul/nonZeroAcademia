@@ -16,18 +16,24 @@ import java.util.List;
 public class VideoController {
 
     private final VideoService videoService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VideoResponse> getOneVideo(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(videoService.getOneVideo(id));
+    }
+
+    @GetMapping("/{capsulName}/{sectionSequence}")
+    public ResponseEntity<List<VideoResponse>> getSectionVideos(
+            @PathVariable String capsulName,
+            @PathVariable Integer sectionSequence) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(videoService.getSectionVideos(capsulName, sectionSequence));
+    }
     @PostMapping
     public ResponseEntity<String> createOneVideo(@RequestBody VideoRequest request) {
         videoService.createOneVideo(request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Video added");
-    }
-
-    @GetMapping("/{capsulName}/{sectionSequence}")
-    public ResponseEntity<List<VideoResponse>> getSectionVideo(
-            @PathVariable String capsulName,
-            @PathVariable Integer sectionSequence) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(videoService.getSectionVideo(capsulName, sectionSequence));
     }
 }

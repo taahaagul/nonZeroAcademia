@@ -39,7 +39,7 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    public List<VideoResponse> getSectionVideo(String capsulName, Integer sectionSequence) {
+    public List<VideoResponse> getSectionVideos(String capsulName, Integer sectionSequence) {
         Capsul capsul = capsulRepository.findByName(capsulName)
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not founded"));
 
@@ -50,5 +50,12 @@ public class VideoService {
         return list.stream()
                 .map(video -> new VideoResponse(video))
                 .collect(Collectors.toList());
+    }
+
+    public VideoResponse getOneVideo(Integer id) {
+        Video video = videoRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Video is not found"));
+
+        return new VideoResponse(video);
     }
 }
