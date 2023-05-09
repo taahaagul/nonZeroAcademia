@@ -22,7 +22,7 @@ public class SectionService {
     private final CapsulRepository capsulRepository;
     private final VideoService videoService;
     public void createOneSection(SectionRequest request) {
-        Capsul capsul = capsulRepository.findByName(request.getCapsulName())
+        Capsul capsul = capsulRepository.findById(request.getCapsulId())
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
 
         Section section = Section.builder()
@@ -34,13 +34,13 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public List<SectionResponse> getAllSection(String name) {
-        Capsul capsul = capsulRepository.findByName(name)
+    public List<SectionResponse> getAllSection(Integer id) {
+        Capsul capsul = capsulRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
 
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
         return list.stream().map(s -> {
-            List<VideoResponse> videos = videoService.getSectionVideos(name, s.getSectionSequence());
+            List<VideoResponse> videos = videoService.getSectionVideos(id, s.getId());
             return new SectionResponse(s, videos);}).collect(Collectors.toList());
     }
 }

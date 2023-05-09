@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class SectionRequest {
     private Integer sectionSequence;
     private String title;
-    private String capsulName;
+    private Integer capsulId;
 }

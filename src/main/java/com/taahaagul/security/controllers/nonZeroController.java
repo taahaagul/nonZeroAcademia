@@ -43,10 +43,10 @@ public class nonZeroController {
                 .body(capsulService.getAllCapsul());
     }
 
-    @GetMapping("/section/{name}")
-    public ResponseEntity<List<SectionResponse>> getAllSection(@PathVariable String name) {
+    @GetMapping("/section/{id}")
+    public ResponseEntity<List<SectionResponse>> getAllSection(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(sectionService.getAllSection(name));
+                .body(sectionService.getAllSection(id));
     }
 
     @GetMapping("/video/{id}")
@@ -55,11 +55,11 @@ public class nonZeroController {
                 .body(videoService.getOneVideo(id));
     }
 
-    @GetMapping("/video/{capsulName}/{sectionSequence}")
+    @GetMapping("/video/{capsulId}/{sectionId}")
     public ResponseEntity<List<VideoResponse>> getSectionVideos(
-            @PathVariable String capsulName,
-            @PathVariable Integer sectionSequence) {
+            @PathVariable Integer capsulId,
+            @PathVariable Integer sectionId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(videoService.getSectionVideos(capsulName, sectionSequence));
+                .body(videoService.getSectionVideos(capsulId, sectionId));
     }
 }

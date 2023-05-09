@@ -22,10 +22,10 @@ public class VideoService {
     private final SectionRepository sectionRepository;
     private final CapsulRepository capsulRepository;
     public void createOneVideo(VideoRequest request) {
-        Capsul capsul = capsulRepository.findByName(request.getCapsulName())
+        Capsul capsul = capsulRepository.findById(request.getCapsulId())
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not founded"));
 
-        Section section = sectionRepository.findBySectionSequence(request.getSectionSequence())
+        Section section = sectionRepository.findById(request.getSectionId())
                 .orElseThrow(() -> new UserNotFoundException("Section is not found"));
 
         Video video = Video.builder()
@@ -39,11 +39,11 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    public List<VideoResponse> getSectionVideos(String capsulName, Integer sectionSequence) {
-        Capsul capsul = capsulRepository.findByName(capsulName)
+    public List<VideoResponse> getSectionVideos(Integer capsulId, Integer sectionId) {
+        Capsul capsul = capsulRepository.findById(capsulId)
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not founded"));
 
-        Section section = sectionRepository.findBySectionSequence(sectionSequence)
+        Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new UserNotFoundException("Section is not found"));
 
         List<Video> list = videoRepository.findAllByCapsulAndSection(capsul, section);

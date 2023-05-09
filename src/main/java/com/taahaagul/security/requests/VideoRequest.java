@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VideoRequest {
     private Integer videoSequence;
-    private String capsulName;
-    private Integer sectionSequence;
+    private Integer capsulId;
+    private Integer sectionId;
     private String title;
     private String videoUrl;
 }
