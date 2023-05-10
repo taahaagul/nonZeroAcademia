@@ -20,6 +20,7 @@ public class Video {
     private Integer videoSequence;
     private String videoUrl;
     private String title;
+    private boolean status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", nullable = false)

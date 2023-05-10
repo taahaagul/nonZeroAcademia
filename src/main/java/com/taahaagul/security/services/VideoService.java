@@ -34,6 +34,7 @@ public class VideoService {
                 .title(request.getTitle())
                 .section(section)
                 .capsul(capsul)
+                .status(false)
                 .build();
 
         videoRepository.save(video);
@@ -57,5 +58,13 @@ public class VideoService {
                 .orElseThrow(() -> new UserNotFoundException("Video is not found"));
 
         return new VideoResponse(video);
+    }
+
+    public void changeStatus(Integer videoId) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new UserNotFoundException("Video is not found!"));
+        video.setStatus(true);
+
+        videoRepository.save(video);
     }
 }

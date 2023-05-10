@@ -13,6 +13,7 @@ public class VideoResponse {
     private String title;
     private String capsulName;
     private Integer sectionSequence;
+    private boolean status;
 
     public VideoResponse (Video entity) {
         this.id = entity.getId();
@@ -23,5 +24,6 @@ public class VideoResponse {
         this.videoUrl = entity.getVideoUrl();
         this.capsulName = entity.getCapsul().getName();
         this.sectionSequence = entity.getSection().getSectionSequence();
+        this.status = entity.isStatus();
     }
 }

@@ -34,13 +34,13 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public List<SectionResponse> getAllSection(Integer id) {
-        Capsul capsul = capsulRepository.findById(id)
+    public List<SectionResponse> getAllSection(Integer capsulId) {
+        Capsul capsul = capsulRepository.findById(capsulId)
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
 
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
         return list.stream().map(s -> {
-            List<VideoResponse> videos = videoService.getSectionVideos(id, s.getId());
+            List<VideoResponse> videos = videoService.getSectionVideos(capsulId, s.getId());
             return new SectionResponse(s, videos);}).collect(Collectors.toList());
     }
 }
