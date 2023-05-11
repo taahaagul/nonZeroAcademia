@@ -4,10 +4,9 @@ import com.taahaagul.security.responses.CapsulResponse;
 import com.taahaagul.security.responses.SectionResponse;
 import com.taahaagul.security.responses.UserResponse;
 import com.taahaagul.security.responses.VideoResponse;
-import com.taahaagul.security.services.CapsulService;
-import com.taahaagul.security.services.SectionService;
-import com.taahaagul.security.services.UserService;
-import com.taahaagul.security.services.VideoService;
+import com.taahaagul.security.services.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.Past;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ public class nonZeroController {
     private final CapsulService capsulService;
     private final SectionService sectionService;
     private final VideoService videoService;
+    private final VoteService voteService;
 
     @GetMapping("/user")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -63,10 +63,17 @@ public class nonZeroController {
                 .body(videoService.getSectionVideos(capsulId, sectionId));
     }
 
-    @PutMapping("/video/status/{videoId}")
-    public ResponseEntity<String> changeStatus(Integer videoId) {
+    @PostMapping("/vote/{videoId}")
+    public ResponseEntity<String> createVote(@PathVariable Integer videoId) {
+        voteService.createVote(videoId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Vote added");
+    }
+
+    @PutMapping("/status/{videoId}")
+    public ResponseEntity<String> changeStatus(@PathVariable Integer videoId) {
         videoService.changeStatus(videoId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Status one!");
+                .body("Status zero");
     }
 }

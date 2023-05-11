@@ -1,18 +1,18 @@
 package com.taahaagul.security.services;
 
-import com.taahaagul.security.entities.Capsul;
-import com.taahaagul.security.entities.Section;
-import com.taahaagul.security.entities.Video;
+import com.taahaagul.security.entities.*;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.CapsulRepository;
 import com.taahaagul.security.repository.SectionRepository;
 import com.taahaagul.security.repository.VideoRepository;
+import com.taahaagul.security.repository.VoteRepository;
 import com.taahaagul.security.requests.VideoRequest;
 import com.taahaagul.security.responses.VideoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +21,8 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final SectionRepository sectionRepository;
     private final CapsulRepository capsulRepository;
+    private final VoteRepository voteRepository;
+    private final AuthenticationService authenticationService;
     public void createOneVideo(VideoRequest request) {
         Capsul capsul = capsulRepository.findById(request.getCapsulId())
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not founded"));
@@ -47,9 +49,15 @@ public class VideoService {
         Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new UserNotFoundException("Section is not found"));
 
+        User user = authenticationService.getCurrentUser();
+
         List<Video> list = videoRepository.findAllByCapsulAndSection(capsul, section);
         return list.stream()
-                .map(video -> new VideoResponse(video))
+                .map(video -> {
+                    Optional<Vote> vote = voteRepository.findByVideoAndUser(video, user);
+                    if (vote.isPresent())
+                        video.setStatus(true);
+                    return new VideoResponse(video);})
                 .collect(Collectors.toList());
     }
 
@@ -63,8 +71,7 @@ public class VideoService {
     public void changeStatus(Integer videoId) {
         Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new UserNotFoundException("Video is not found!"));
-        video.setStatus(true);
-
+        video.setStatus(false);
         videoRepository.save(video);
     }
 }
