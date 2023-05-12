@@ -5,14 +5,12 @@ import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.CapsulRepository;
 import com.taahaagul.security.repository.SectionRepository;
 import com.taahaagul.security.repository.VideoRepository;
-import com.taahaagul.security.repository.VoteRepository;
 import com.taahaagul.security.requests.VideoRequest;
 import com.taahaagul.security.responses.VideoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +19,7 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final SectionRepository sectionRepository;
     private final CapsulRepository capsulRepository;
-    private final VoteRepository voteRepository;
+    private final VoteService voteService;
     private final AuthenticationService authenticationService;
     public void createOneVideo(VideoRequest request) {
         Capsul capsul = capsulRepository.findById(request.getCapsulId())
@@ -49,14 +47,10 @@ public class VideoService {
         Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new UserNotFoundException("Section is not found"));
 
-        User user = authenticationService.getCurrentUser();
-
         List<Video> list = videoRepository.findAllByCapsulAndSection(capsul, section);
         return list.stream()
                 .map(video -> {
-                    Optional<Vote> vote = voteRepository.findByVideoAndUser(video, user);
-                    if (vote.isPresent())
-                        video.setStatus(true);
+                    voteToStatus(video);
                     return new VideoResponse(video);})
                 .collect(Collectors.toList());
     }
@@ -73,5 +67,11 @@ public class VideoService {
                 .orElseThrow(() -> new UserNotFoundException("Video is not found!"));
         video.setStatus(false);
         videoRepository.save(video);
+    }
+
+    public void voteToStatus(Video video) {
+        var currentUser = authenticationService.getCurrentUser();
+        Boolean bool = voteService.isVoteExist(video, currentUser);
+        if (bool) video.setStatus(true);
     }
 }

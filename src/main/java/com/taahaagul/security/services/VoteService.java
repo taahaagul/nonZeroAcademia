@@ -17,6 +17,8 @@ public class VoteService {
     private final VideoRepository videoRepository;
     private final AuthenticationService authenticationService;
     private final VoteRepository voteRepository;
+    private final UserService userService;
+
     public void createVote(Integer videoId) {
         User user = authenticationService.getCurrentUser();
         Video video = videoRepository.findById(videoId)
@@ -31,5 +33,10 @@ public class VoteService {
                 .video(video)
                 .build();
         voteRepository.save(vote);
+        userService.incrementRank(user);
+    }
+
+    public boolean isVoteExist(Video video, User user) {
+        return voteRepository.findByVideoAndUser(video, user).isPresent();
     }
 }

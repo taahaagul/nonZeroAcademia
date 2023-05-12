@@ -6,8 +6,13 @@ import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
+import com.taahaagul.security.responses.NonTopUserResponse;
 import com.taahaagul.security.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
+
 
     public List<UserResponse> getAllUsers() {
        List<User> list = userRepository.findAll();
@@ -66,5 +72,23 @@ public class UserService {
         User user = authenticationService.getCurrentUser();
         user.setRole(Role.ONE);
         userRepository.save(user);
+    }
+
+    public void incrementRank(User user) {
+        user.incrementNonRank();
+        userRepository.save(user);
+    }
+
+    public List<NonTopUserResponse> nonTopUser() {
+        Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "nonRank"));
+        Page<User> nonTopUsers = userRepository.findAllByOrderByNonRankDesc(topTen);
+        return nonTopUsers.getContent().stream()
+                .map(NonTopUserResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public int getUserNonRankPosition() {
+        User user = authenticationService.getCurrentUser();
+        return userRepository.countUsersWithEqualOrHigherNonRank(user.getNonRank());
     }
 }

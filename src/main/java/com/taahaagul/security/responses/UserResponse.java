@@ -8,18 +8,19 @@ import java.util.Date;
 
 @Data
 public class UserResponse {
-    Long id;
-    String firstName;
-    String lastName;
-    String userName;
-    String email;
-    Date memberSince;
-    String aboutMe;
-    String education;
-    String city;
-    String gitHub;
-    String linkedin;
-    String thumbnail;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String userName;
+    private String email;
+    private Date memberSince;
+    private String aboutMe;
+    private String education;
+    private String city;
+    private String gitHub;
+    private String linkedin;
+    private String thumbnail;
+    private Integer nonRank;
 
     public UserResponse(User entity) {
         this.id = entity.getId();
@@ -34,5 +35,6 @@ public class UserResponse {
         this.gitHub = entity.getGitHub();
         this.linkedin = entity.getLinkedin();
         this.thumbnail = entity.getThumbnailUrl();
+        this.nonRank = entity.getNonRank();
     }
 }

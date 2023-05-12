@@ -51,4 +51,10 @@ public class UserContoller {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Zero to One");
     }
+
+    @GetMapping("/position")
+    public ResponseEntity<Integer> getPosition(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserNonRankPosition());
+    }
 }

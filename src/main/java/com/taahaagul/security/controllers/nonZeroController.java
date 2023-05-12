@@ -1,9 +1,6 @@
 package com.taahaagul.security.controllers;
 
-import com.taahaagul.security.responses.CapsulResponse;
-import com.taahaagul.security.responses.SectionResponse;
-import com.taahaagul.security.responses.UserResponse;
-import com.taahaagul.security.responses.VideoResponse;
+import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.Past;
@@ -35,6 +32,12 @@ public class nonZeroController {
     public ResponseEntity<UserResponse> getOneUser(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getOneUser(userId));
+    }
+
+    @GetMapping("/nonTopUser")
+    public ResponseEntity<List<NonTopUserResponse>> nonTopUser() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.nonTopUser());
     }
 
     @GetMapping("/capsul")

@@ -57,6 +57,7 @@ public class AuthenticationService {
                 .role(Role.ZERO)
                 .thumbnailUrl("https://taahaagul.s3.amazonaws.com/c7185a1b-4f26-4ad4-b5e8-11fa411dccdb.jpeg")
                 .enabled(false)
+                .nonRank(0)
                 .build();
         userRepository.save(user);
 
