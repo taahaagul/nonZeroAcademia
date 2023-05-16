@@ -22,7 +22,7 @@ public class VoteService {
     private final AuthenticationService authenticationService;
     private final VoteRepository voteRepository;
     private final UserService userService;
-    private final NonNews<String> set = new NonNews<>(5);
+    private final NonNews<String> set = new NonNews<>(4);
 
     public void createVote(Integer videoId) {
         User user = authenticationService.getCurrentUser();
