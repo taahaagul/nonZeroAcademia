@@ -1,5 +1,6 @@
 package com.taahaagul.security.controllers;
 
+import com.taahaagul.security.entities.NonNews;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,6 +23,7 @@ public class nonZeroController {
     private final SectionService sectionService;
     private final VideoService videoService;
     private final VoteService voteService;
+    private final NonDaysService nonDaysService;
 
     @GetMapping("/user")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -78,5 +81,17 @@ public class nonZeroController {
         videoService.changeStatus(videoId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Status zero");
+    }
+
+    @GetMapping("/nonNews")
+    public ResponseEntity<List<String>> getNonNews() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(voteService.getNonNews());
+    }
+
+    @GetMapping("/nonDays")
+    public ResponseEntity<List<LocalDate>> getNonDays() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(nonDaysService.getNonDays());
     }
 }

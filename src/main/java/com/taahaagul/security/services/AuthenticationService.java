@@ -3,6 +3,7 @@ package com.taahaagul.security.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taahaagul.security.entities.*;
 import com.taahaagul.security.exceptions.UserNotFoundException;
+import com.taahaagul.security.repository.NonDaysRepository;
 import com.taahaagul.security.repository.VerificationTokenRepository;
 import com.taahaagul.security.requests.LoginRequest;
 import com.taahaagul.security.responses.AuthenticationResponse;
@@ -20,6 +21,7 @@ import com.taahaagul.security.repository.TokenRepository;
 import com.taahaagul.security.repository.UserRepository;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +37,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final NonDaysRepository nonDaysRepository;
 
     public void register(RegisterRequest request) {
 
@@ -106,10 +109,25 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+        saveNonDays(user);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    private void saveNonDays(User user) {
+        LocalDate currentDate = LocalDate.now();
+        Optional<NonDays> existNonDays= nonDaysRepository.findByUserAndLoginDate(user, currentDate);
+        if(!existNonDays.isPresent()) {
+            NonDays nonDays = NonDays.builder()
+                    .loginDate(currentDate)
+                    .user(user)
+                    .build();
+            nonDaysRepository.save(nonDays);
+            user.incrementNonRank();
+            userRepository.save(user);
+        }
     }
 
     private void saveUserToken(User user, String jwtToken) {
