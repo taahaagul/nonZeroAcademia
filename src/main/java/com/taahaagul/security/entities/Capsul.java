@@ -19,6 +19,8 @@ public class Capsul {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String name;
+    private String title;
+    private String thumbnail;
     private String tutorName;
     private String price;
 }

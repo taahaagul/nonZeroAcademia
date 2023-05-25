@@ -28,6 +28,8 @@ public class CapsulService {
                 .name(request.getName())
                 .tutorName(request.getTutorName())
                 .price(request.getPrice())
+                .title(request.getTitle())
+                .thumbnail(request.getThumbnail())
                 .build();
 
         capsulRepository.save(capsul);

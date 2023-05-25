@@ -13,4 +13,6 @@ public class CapsulRequest {
     private String name;
     private String tutorName;
     private String price;
+    private String title;
+    private String thumbnail;
 }
