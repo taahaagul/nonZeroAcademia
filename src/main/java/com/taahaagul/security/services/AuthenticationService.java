@@ -56,7 +56,7 @@ public class AuthenticationService {
                 .userName(request.getUserName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .memberSince(new Date())
+                .memberSince(LocalDate.now())
                 .role(Role.ZERO)
                 .thumbnailUrl("https://taahaagul.s3.amazonaws.com/c7185a1b-4f26-4ad4-b5e8-11fa411dccdb.jpeg")
                 .enabled(false)
@@ -165,7 +165,7 @@ public class AuthenticationService {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);

@@ -1,8 +1,6 @@
 package com.taahaagul.security.entities;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.*;
 import java.util.stream.Stream;
 

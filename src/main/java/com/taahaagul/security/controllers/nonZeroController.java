@@ -1,15 +1,11 @@
 package com.taahaagul.security.controllers;
 
-import com.taahaagul.security.entities.NonNews;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.validation.constraints.Past;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 

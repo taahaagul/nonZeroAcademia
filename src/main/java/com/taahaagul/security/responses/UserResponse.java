@@ -4,6 +4,7 @@ import com.taahaagul.security.entities.Role;
 import com.taahaagul.security.entities.User;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -13,7 +14,7 @@ public class UserResponse {
     private String lastName;
     private String userName;
     private String email;
-    private Date memberSince;
+    private LocalDate memberSince;
     private String aboutMe;
     private String education;
     private String city;

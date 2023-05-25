@@ -39,8 +39,8 @@ public class SectionService {
                 .orElseThrow(() -> new UserNotFoundException("Capsul is not found"));
 
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
-        return list.stream().map(s -> {
-            List<VideoResponse> videos = videoService.getSectionVideos(capsulId, s.getId());
-            return new SectionResponse(s, videos);}).collect(Collectors.toList());
+        return list.stream().map(section -> {
+            List<VideoResponse> videos = videoService.getSectionVideos(capsulId, section.getId());
+            return new SectionResponse(section, videos);}).collect(Collectors.toList());
     }
 }

@@ -29,8 +29,7 @@ public class VoteService {
         Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new UserNotFoundException("Video is not found!"));
 
-        Optional<Vote> existVote = voteRepository.findByVideoAndUser(video, user);
-        if(existVote.isPresent())
+        if(isVoteExist(video, user))
             throw new UserNotFoundException("Vote is already exist");
 
         Vote vote = Vote.builder()
