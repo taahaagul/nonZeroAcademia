@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/BATG/nondaily")
+@RequestMapping("/BATG/nonDaily")
 @RequiredArgsConstructor
 public class NonDailyController {
 

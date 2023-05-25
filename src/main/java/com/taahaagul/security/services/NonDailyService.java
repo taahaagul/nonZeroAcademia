@@ -18,4 +18,8 @@ public class NonDailyService {
 
         nonDailyRepository.save(nonDaily);
     }
+
+    public NonDaily getOneDaily() {
+        return nonDailyRepository.findRandomNonDaily();
+    }
 }

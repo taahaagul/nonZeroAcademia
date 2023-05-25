@@ -1,5 +1,6 @@
 package com.taahaagul.security.controllers;
 
+import com.taahaagul.security.entities.NonDaily;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class nonZeroController {
     private final VideoService videoService;
     private final VoteService voteService;
     private final NonDaysService nonDaysService;
+    private final NonDailyService nonDailyService;
 
     @GetMapping("/user")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -91,4 +93,9 @@ public class nonZeroController {
                 .body(nonDaysService.getNonDays());
     }
 
+    @GetMapping("/nonDaily")
+    public ResponseEntity<NonDaily> getNonDaily() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(nonDailyService.getOneDaily());
+    }
 }
