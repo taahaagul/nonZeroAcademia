@@ -1,5 +1,6 @@
 package com.taahaagul.security.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
       """)
     List<Token> findAllValidTokenByUser(Long id);
     Optional<Token> findByToken(String token);
+
+    @Query("select count(distinct t.user) from Token t where t.expiry > :expiry")
+    int countActiveUsers(LocalDateTime expiry);
 }

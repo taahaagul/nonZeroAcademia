@@ -22,6 +22,7 @@ import com.taahaagul.security.repository.UserRepository;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -133,12 +134,15 @@ public class AuthenticationService {
     }
 
     private void saveUserToken(User user, String jwtToken) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiration = now.plusMinutes(1);
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)
+                .expiry(expiration)
                 .build();
         tokenRepository.save(token);
     }

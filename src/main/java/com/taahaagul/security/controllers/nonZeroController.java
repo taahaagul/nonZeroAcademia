@@ -22,6 +22,7 @@ public class nonZeroController {
     private final VoteService voteService;
     private final NonDaysService nonDaysService;
     private final NonDailyService nonDailyService;
+    private final TokenService tokenService;
 
     @GetMapping("/user")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -98,4 +99,11 @@ public class nonZeroController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(nonDailyService.getOneDaily());
     }
+
+    @GetMapping("/online")
+    public ResponseEntity<Integer> getOnline() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(tokenService.getOnline());
+    }
+
 }
