@@ -105,5 +105,4 @@ public class nonZeroController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(tokenService.getOnline());
     }
-
 }
