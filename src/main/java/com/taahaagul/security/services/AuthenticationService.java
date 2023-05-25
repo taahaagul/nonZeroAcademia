@@ -57,6 +57,8 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .memberSince(LocalDate.now())
+                .gitHub("https://github.com/")
+                .linkedin("https://www.linkedin.com/")
                 .role(Role.ZERO)
                 .thumbnailUrl("https://taahaagul.s3.amazonaws.com/c7185a1b-4f26-4ad4-b5e8-11fa411dccdb.jpeg")
                 .enabled(false)
