@@ -1,6 +1,7 @@
 package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.entities.NonDaily;
+import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class nonZeroController {
     private final NonDaysService nonDaysService;
     private final NonDailyService nonDailyService;
     private final TokenService tokenService;
+    private final CommentService commentService;
 
     @GetMapping("/user")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -104,5 +106,18 @@ public class nonZeroController {
     public ResponseEntity<Integer> getOnline() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(tokenService.getOnline());
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<String> createOneComment(@RequestBody CommentCreateRequest request) {
+        commentService.createOneComment(request);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Comment created successfully");
+    }
+
+    @GetMapping("/comment/{videoId}")
+    public ResponseEntity<List<CommentResponse>> getCommentVideo(@PathVariable Integer videoId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentService.getAllComment(videoId));
     }
 }
