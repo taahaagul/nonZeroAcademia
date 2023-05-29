@@ -7,9 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserChangePaswRequest {
     @NotBlank
     private String oldPasw;

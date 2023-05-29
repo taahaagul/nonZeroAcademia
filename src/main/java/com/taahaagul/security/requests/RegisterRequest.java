@@ -8,9 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class RegisterRequest {
     @NotBlank(message = "firstName is required")
     private String firstName;
