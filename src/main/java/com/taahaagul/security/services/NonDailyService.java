@@ -6,6 +6,9 @@ import com.taahaagul.security.requests.NonDailyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NonDailyService {
@@ -19,7 +22,13 @@ public class NonDailyService {
         nonDailyRepository.save(nonDaily);
     }
 
-    public NonDaily getOneDaily() {
-        return nonDailyRepository.findRandomNonDaily();
+    public List<NonDaily> getDaily() {
+        List<NonDaily> nonDailyList = new ArrayList<>();
+
+        nonDailyList.add(nonDailyRepository.findRandomNonDaily());
+        nonDailyList.add(nonDailyRepository.findRandomNonDaily());
+        nonDailyList.add(nonDailyRepository.findRandomNonDaily());
+
+        return nonDailyList;
     }
 }

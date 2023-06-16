@@ -97,9 +97,9 @@ public class nonZeroController {
     }
 
     @GetMapping("/nonDaily")
-    public ResponseEntity<NonDaily> getNonDaily() {
+    public ResponseEntity<List<NonDaily>> getNonDaily() {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(nonDailyService.getOneDaily());
+                .body(nonDailyService.getDaily());
     }
 
     @GetMapping("/online")
