@@ -1,6 +1,5 @@
 package com.taahaagul.security.services;
 
-import com.taahaagul.security.entities.NonDays;
 import com.taahaagul.security.entities.Rosette;
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.repository.RosetteRepository;

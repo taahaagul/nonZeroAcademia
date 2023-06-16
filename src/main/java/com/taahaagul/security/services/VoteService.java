@@ -38,14 +38,14 @@ public class VoteService {
                 .build();
         voteRepository.save(vote);
         userService.incrementRank(user);
-        addNonNews(user.getUserName(), video.getTitle());
+        addNonNews(user.getThumbnailUrl(), user.getUserName(), video.getTitle());
     }
 
-    private void addNonNews(String userName, String title) {
+    private void addNonNews(String thumbnailUrl, String userName, String title) {
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
         int minute = currentTime.getMinute();
-        set.add(userName + " completed " + title + " " + hour + ":" + minute);
+        set.add(thumbnailUrl + " " + userName + " completed " + title + " " + hour + ":" + minute);
     }
 
     public boolean isVoteExist(Video video, User user) {
