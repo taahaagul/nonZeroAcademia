@@ -9,13 +9,17 @@ import java.time.LocalDate;
 public class CommentResponse {
     private Long commentId;
     private String text;
-    private String commentUsername;
+    private String firstName;
+    private String lastName;
+    private String thumbnailUrl;
     private LocalDate createDate;
 
     public CommentResponse(Comment entity) {
         this.commentId = entity.getId();
         this.text = entity.getText();
-        this.commentUsername = entity.getUser().getUserName();
+        this.firstName = entity.getUser().getFirstName();
+        this.lastName = entity.getUser().getLastName();
+        this.thumbnailUrl = entity.getUser().getThumbnailUrl();
         this.createDate = entity.getCreateDate();
     }
 }
