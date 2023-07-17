@@ -41,6 +41,7 @@ public class SectionService {
         List<Section> list = sectionRepository.findAllByCapsul(capsul);
         return list.stream().map(section -> {
             List<VideoResponse> videos = videoService.getSectionVideos(capsulId, section.getId());
-            return new SectionResponse(section, videos);}).collect(Collectors.toList());
+            return new SectionResponse(section, videos);})
+                .collect(Collectors.toList());
     }
 }
