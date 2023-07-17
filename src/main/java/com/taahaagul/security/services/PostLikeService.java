@@ -7,6 +7,7 @@ import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostLikeRepository;
 import com.taahaagul.security.repository.PostRepository;
 import com.taahaagul.security.responses.PostLikeResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,15 @@ public class PostLikeService {
         return list.stream()
                 .map(postLike -> new PostLikeResponse(postLike))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deletePostLike(Long postId) {
+        User user = authenticationService.getCurrentUser();
+        Post post = postRepository.findById(postId)
+                        .orElseThrow(() -> new UserNotFoundException("Post is not founded"));
+
+        postLikeRepository.deleteByUserAndPost(user, post);
+
     }
 }

@@ -159,4 +159,11 @@ public class nonZeroController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("PostLike created successfull");
     }
+
+    @DeleteMapping("/post-like/{postId}")
+    public ResponseEntity<String> deletePostLike(@PathVariable Long postId) {
+        postLikeService.deletePostLike(postId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("PostLike deleted successfully");
+    }
 }
