@@ -4,7 +4,6 @@ import com.taahaagul.security.entities.NonDaily;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
 import com.taahaagul.security.requests.PostCreateRequest;
-import com.taahaagul.security.requests.PostLikeRequest;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
@@ -154,9 +153,9 @@ public class nonZeroController {
                 .body("PostComment created successfully");
     }
 
-    @PostMapping("/post-like")
-    public ResponseEntity<String> createOnePostLike(@RequestBody PostLikeRequest request) {
-        postLikeService.createOnePostLike(request);
+    @PostMapping("/post-like/{postId}")
+    public ResponseEntity<String> createOnePostLike(@PathVariable Long postId) {
+        postLikeService.createOnePostLike(postId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("PostLike created successfull");
     }

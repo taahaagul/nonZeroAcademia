@@ -6,7 +6,6 @@ import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostLikeRepository;
 import com.taahaagul.security.repository.PostRepository;
-import com.taahaagul.security.requests.PostLikeRequest;
 import com.taahaagul.security.responses.PostLikeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,14 @@ public class PostLikeService {
     private final AuthenticationService authenticationService;
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
-    public void createOnePostLike(PostLikeRequest request) {
+    public void createOnePostLike(Long postId) {
         User user = authenticationService.getCurrentUser();
 
-        Post post = postRepository.findById(request.getPostId())
+        Post post = postRepository.findById(postId)
                 .orElseThrow(()-> new UserNotFoundException("Post is not founded"));
+
+        if(isPostLikeExist(user, post))
+            throw new UserNotFoundException("PostLike is already exist");
 
         PostLike postLike = PostLike.builder()
                 .user(user)
@@ -33,6 +35,10 @@ public class PostLikeService {
                 .build();
 
         postLikeRepository.save(postLike);
+    }
+
+    private boolean isPostLikeExist(User user, Post post) {
+        return postLikeRepository.findByUserAndPost(user, post).isPresent();
     }
 
     public List<PostLikeResponse> getAllPostLike(Long postId) {
