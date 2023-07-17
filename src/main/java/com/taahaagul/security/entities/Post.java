@@ -1,5 +1,6 @@
 package com.taahaagul.security.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,22 +16,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Video {
+public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
-    private Integer videoSequence;
-    private String videoUrl;
-    private String title;
-    private boolean status;
+    private Long id;
+
+    @Lob
+    @Column(columnDefinition = "text")
+    String text;
+
+    private LocalDate createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Section section;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "capsul_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Capsul capsul;
+    @JsonIgnore
+    private User user;
 }

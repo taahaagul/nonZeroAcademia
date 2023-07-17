@@ -5,7 +5,6 @@ import com.taahaagul.security.entities.User;
 import com.taahaagul.security.entities.Video;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.CommentRepository;
-import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.repository.VideoRepository;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.responses.CommentResponse;
