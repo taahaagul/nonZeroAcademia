@@ -86,4 +86,8 @@ public class User implements UserDetails {
     public void incrementNonRank() {
         nonRank++;
     }
+
+    public void decrementNonRank() {
+        nonRank--;
+    }
 }

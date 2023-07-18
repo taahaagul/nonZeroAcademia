@@ -79,6 +79,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void decerementRank(User user) {
+        user.decrementNonRank();
+        userRepository.save(user);
+    }
+
     public List<NonTopUserResponse> nonTopUser() {
         Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "nonRank"));
         Page<User> nonTopUsers = userRepository.findAllByOrderByNonRankDesc(topTen);

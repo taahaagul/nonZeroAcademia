@@ -21,6 +21,7 @@ public class PostLikeService {
     private final AuthenticationService authenticationService;
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserService userService;
     public void createOnePostLike(Long postId) {
         User user = authenticationService.getCurrentUser();
 
@@ -34,6 +35,8 @@ public class PostLikeService {
                 .user(user)
                 .post(post)
                 .build();
+
+        userService.incrementRank(post.getUser());
 
         postLikeRepository.save(postLike);
     }
@@ -56,7 +59,10 @@ public class PostLikeService {
         Post post = postRepository.findById(postId)
                         .orElseThrow(() -> new UserNotFoundException("Post is not founded"));
 
-        postLikeRepository.deleteByUserAndPost(user, post);
-
+        if(isPostLikeExist(user, post)) {
+            userService.decerementRank(post.getUser());
+            postLikeRepository.deleteByUserAndPost(user, post);
+        } else
+            throw new UserNotFoundException("PostLike is already deleted..");
     }
 }
