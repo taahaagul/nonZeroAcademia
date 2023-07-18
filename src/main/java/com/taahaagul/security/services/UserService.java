@@ -8,6 +8,7 @@ import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
 import com.taahaagul.security.responses.NonTopUserResponse;
 import com.taahaagul.security.responses.UserResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,4 +98,53 @@ public class UserService {
         User user = authenticationService.getCurrentUser();
         return userRepository.countUsersWithEqualOrHigherNonRank(user.getNonRank());
     }
+
+    @Transactional
+    public void followUser(Long followerId, Long followedId) {
+        User follower = userRepository.findById(followerId)
+                .orElseThrow(() -> new UserNotFoundException("Follower not found"));
+
+        User followed = userRepository.findById(followedId)
+                .orElseThrow(() -> new UserNotFoundException("Followed not found"));
+
+        follower.addFollowing(followed);
+
+        userRepository.save(follower);
+    }
+
+    @Transactional
+    public void unfollowUser(Long followerId, Long followedId) {
+        User follower = userRepository.findById(followerId)
+                .orElseThrow(() -> new UserNotFoundException("Follower not found"));
+
+        User followed = userRepository.findById(followedId)
+                .orElseThrow(() -> new UserNotFoundException("Followed not found"));
+
+        follower.removeFollowing(followed);
+
+        userRepository.save(follower);
+    }
+
+    public Set<UserResponse> getFollowers(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not founded"));
+
+        return user.getFollowers().stream()
+                .map(this::convertToUserResponse)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<UserResponse> getFollowing(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not founded"));
+
+        return user.getFollowing().stream()
+                .map(this::convertToUserResponse)
+                .collect(Collectors.toSet());
+    }
+
+    private UserResponse convertToUserResponse(User user) {
+        return new UserResponse(user);
+    }
+
 }

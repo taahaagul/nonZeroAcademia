@@ -1,6 +1,7 @@
 package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.entities.NonDaily;
+import com.taahaagul.security.entities.User;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
 import com.taahaagul.security.requests.PostCreateRequest;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/BATG/nonzero")
@@ -165,5 +167,37 @@ public class nonZeroController {
         postLikeService.deletePostLike(postId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("PostLike deleted successfully");
+    }
+
+    @PostMapping("/{followerId}/follow/{followedId}")
+    public ResponseEntity<String> followUser(
+            @PathVariable Long followerId,
+            @PathVariable Long followedId
+    ) {
+        userService.followUser(followerId, followedId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Following successfull");
+    }
+
+    @PostMapping("/{followerId}/unfollow/{followedId}")
+    public ResponseEntity<String> unfollowUser(
+            @PathVariable Long followerId,
+            @PathVariable Long followedId
+    ) {
+        userService.unfollowUser(followerId, followedId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Unfollowing successfull");
+    }
+
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<Set<UserResponse>> getFollowers(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getFollowers(userId));
+    }
+
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<Set<UserResponse>> getFollowing(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getFollowing(userId));
     }
 }

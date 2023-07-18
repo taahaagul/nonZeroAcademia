@@ -1,24 +1,19 @@
 package com.taahaagul.security.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"following", "followers"})
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -44,6 +39,26 @@ public class User implements UserDetails {
     private List<Token> tokens;
     private boolean enabled;
     private Integer nonRank;
+
+    @ManyToMany
+    @JoinTable(
+            name = "follow",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_id"))
+    private Set<User> following = new HashSet<>();
+
+    @ManyToMany(mappedBy = "following")
+    private Set<User> followers = new HashSet<>();
+
+    public void addFollowing(User user) {
+        this.following.add(user);
+        user.getFollowers().add(this);
+    }
+
+    public void removeFollowing(User user) {
+        this.following.remove(user);
+        user.getFollowers().remove(this);
+    }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
