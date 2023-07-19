@@ -52,9 +52,9 @@ public class UserContoller {
                 .body("Zero to One");
     }
 
-    @GetMapping("/position")
-    public ResponseEntity<Integer> getPosition(){
+    @GetMapping("/position/{userId}")
+    public ResponseEntity<Integer> getPosition(@PathVariable Long userId){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUserNonRankPosition());
+                .body(userService.getUserNonRankPosition(userId));
     }
 }

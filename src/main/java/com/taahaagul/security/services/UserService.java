@@ -94,22 +94,34 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public int getUserNonRankPosition() {
-        User user = authenticationService.getCurrentUser();
+    public int getUserNonRankPosition(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not founded"));
+
         return userRepository.countUsersWithEqualOrHigherNonRank(user.getNonRank());
     }
 
     @Transactional
     public void followUser(Long followerId, Long followedId) {
+        if(followerId.equals(followedId)) {
+            throw new UserNotFoundException("A user cannot follow themselves");
+        }
+
         User follower = userRepository.findById(followerId)
                 .orElseThrow(() -> new UserNotFoundException("Follower not found"));
 
         User followed = userRepository.findById(followedId)
                 .orElseThrow(() -> new UserNotFoundException("Followed not found"));
 
+        if(follower.getFollowing().contains(followed)) {
+            throw new UserNotFoundException("This user is already followed");
+        }
+
         follower.addFollowing(followed);
+        followed.incrementNonRank();
 
         userRepository.save(follower);
+        userRepository.save(followed);
     }
 
     @Transactional
@@ -120,9 +132,15 @@ public class UserService {
         User followed = userRepository.findById(followedId)
                 .orElseThrow(() -> new UserNotFoundException("Followed not found"));
 
+        if(!follower.getFollowing().contains(followed)) {
+            throw new UserNotFoundException("This user is not followed");
+        }
+
         follower.removeFollowing(followed);
+        followed.decrementNonRank();
 
         userRepository.save(follower);
+        userRepository.save(followed);
     }
 
     public Set<UserResponse> getFollowers(Long userId) {
