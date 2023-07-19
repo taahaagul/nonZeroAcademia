@@ -97,10 +97,10 @@ public class nonZeroController {
                 .body(voteService.getNonNews());
     }
 
-    @GetMapping("/nonDays")
-    public ResponseEntity<List<LocalDate>> getNonDays() {
+    @GetMapping("/nonDays/{userId}")
+    public ResponseEntity<List<LocalDate>> getNonDays(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(nonDaysService.getNonDays());
+                .body(nonDaysService.getNonDays(userId));
     }
 
     @GetMapping("/nonDaily")
