@@ -6,6 +6,7 @@ import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
+import com.taahaagul.security.responses.NonRankPositionResponse;
 import com.taahaagul.security.responses.NonTopUserResponse;
 import com.taahaagul.security.responses.UserResponse;
 import jakarta.transaction.Transactional;
@@ -94,11 +95,14 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public int getUserNonRankPosition(Long userId) {
+    public NonRankPositionResponse getUserNonRankPosition(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not founded"));
 
-        return userRepository.countUsersWithEqualOrHigherNonRank(user.getNonRank());
+        Integer position = userRepository.countUsersWithEqualOrHigherNonRank(user.getNonRank());
+        Integer nonRank = user.getNonRank();
+
+        return new NonRankPositionResponse(nonRank, position);
     }
 
     @Transactional

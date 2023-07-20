@@ -2,6 +2,7 @@ package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
+import com.taahaagul.security.responses.NonRankPositionResponse;
 import com.taahaagul.security.responses.UserResponse;
 import com.taahaagul.security.services.ThumbnailService;
 import com.taahaagul.security.services.UserService;
@@ -53,7 +54,7 @@ public class UserContoller {
     }
 
     @GetMapping("/position/{userId}")
-    public ResponseEntity<Integer> getPosition(@PathVariable Long userId){
+    public ResponseEntity<NonRankPositionResponse> getPosition(@PathVariable Long userId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserNonRankPosition(userId));
     }
