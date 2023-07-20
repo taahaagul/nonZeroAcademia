@@ -30,11 +30,16 @@ public class UserService {
     private final AuthenticationService authenticationService;
 
 
-    public List<UserResponse> getAllUsers() {
+    public UserResponse getAllUsers() {
+        /*
        List<User> list = userRepository.findAll();
        return list.stream()
                .map(user -> new UserResponse(user))
                .collect(Collectors.toList());
+
+         */
+        User user = authenticationService.getCurrentUser();
+        return new UserResponse(user);
     }
 
     public UserResponse getOneUser(Long userId) {

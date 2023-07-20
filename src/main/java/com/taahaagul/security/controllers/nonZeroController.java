@@ -34,7 +34,7 @@ public class nonZeroController {
     private final PostLikeService postLikeService;
 
     @GetMapping("/user")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
+    public ResponseEntity<UserResponse> getAllUsers() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getAllUsers());
     }
