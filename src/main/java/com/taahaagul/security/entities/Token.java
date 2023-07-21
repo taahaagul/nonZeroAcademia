@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,8 @@ public class Token {
     public boolean revoked;
     public  boolean expired;
 
+    @Column(columnDefinition = "TIMESTAMP")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiry;
 
     @ManyToOne(fetch = FetchType.LAZY)

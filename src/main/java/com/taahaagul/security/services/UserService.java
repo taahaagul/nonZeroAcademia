@@ -1,23 +1,20 @@
 package com.taahaagul.security.services;
 
+import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.entities.Role;
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.requests.UserChangePaswRequest;
 import com.taahaagul.security.requests.UserUpdateRequest;
-import com.taahaagul.security.responses.NonRankPositionResponse;
-import com.taahaagul.security.responses.NonTopUserResponse;
-import com.taahaagul.security.responses.UserResponse;
+import com.taahaagul.security.responses.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
+    private final PostCommentService postCommentService;
+    private final PostLikeService postLikeService;
 
 
     public List<UserResponse> getAllUsers() {
@@ -169,4 +168,24 @@ public class UserService {
         return new UserResponse(user);
     }
 
+    @Transactional()
+    public Page<PostResponse> getFollowingPosts(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        List<PostResponse> postResponses = user.getFollowing().stream()
+                .flatMap(followingUser -> followingUser.getPosts().stream())
+                .sorted(Comparator.comparing(Post::getCreateDate).reversed())
+                .map(post -> {
+                    List<PostCommentResponse> postCommentResponses = postCommentService.getAllPostComment(post.getId());
+                    List<PostLikeResponse> postLikeResponses = postLikeService.getAllPostLike(post.getId());
+                    return new PostResponse(post, postCommentResponses, postLikeResponses);
+                })
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), postResponses.size());
+
+        return new PageImpl<>(postResponses.subList(start, end), pageable, postResponses.size());
+    }
 }

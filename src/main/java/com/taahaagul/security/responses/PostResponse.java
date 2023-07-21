@@ -4,13 +4,14 @@ import com.taahaagul.security.entities.Post;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class PostResponse {
     private Long postId;
     private String text;
-    private LocalDate createDate;
+    private LocalDateTime createDate;
     private Long userId;
     private String firstName;
     private String lastName;

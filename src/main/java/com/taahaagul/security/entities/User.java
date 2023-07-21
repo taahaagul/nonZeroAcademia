@@ -39,6 +39,8 @@ public class User implements UserDetails {
     private List<Token> tokens;
     private boolean enabled;
     private Integer nonRank;
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 
     @ManyToMany
     @JoinTable(

@@ -1,13 +1,17 @@
 package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.entities.NonDaily;
-import com.taahaagul.security.entities.User;
+import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
 import com.taahaagul.security.requests.PostCreateRequest;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -200,4 +204,36 @@ public class nonZeroController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getFollowing(userId));
     }
+
+    @GetMapping("/{userId}/following/posts")
+    public ResponseEntity<Page<PostResponse>> getFallowingPosts
+            (@PathVariable Long userId,
+             @RequestParam(defaultValue = "0") int page,
+             @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<PostResponse> followingPosts = userService.getFollowingPosts(userId, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(followingPosts);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

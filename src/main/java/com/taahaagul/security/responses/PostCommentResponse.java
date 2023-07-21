@@ -4,12 +4,13 @@ import com.taahaagul.security.entities.PostComment;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class PostCommentResponse {
     private Long postCommentId;
     private String text;
-    private LocalDate createDate;
+    private LocalDateTime createDate;
     private Long userId;
     private Long postId;
     private String firstName;

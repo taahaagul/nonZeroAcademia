@@ -6,6 +6,7 @@ import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostLikeRepository;
 import com.taahaagul.security.repository.PostRepository;
+import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.responses.PostLikeResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PostLikeService {
     private final AuthenticationService authenticationService;
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     public void createOnePostLike(Long postId) {
         User user = authenticationService.getCurrentUser();
 
@@ -36,9 +37,18 @@ public class PostLikeService {
                 .post(post)
                 .build();
 
-        userService.incrementRank(post.getUser());
+       incrementRank(post.getUser());
 
         postLikeRepository.save(postLike);
+    }
+
+    private void incrementRank(User user) {
+        user.incrementNonRank();
+        userRepository.save(user);
+    }
+    private void decrementRank(User user) {
+        user.decrementNonRank();
+        userRepository.save(user);
     }
 
     private boolean isPostLikeExist(User user, Post post) {
@@ -60,7 +70,7 @@ public class PostLikeService {
                         .orElseThrow(() -> new UserNotFoundException("Post is not founded"));
 
         if(isPostLikeExist(user, post)) {
-            userService.decerementRank(post.getUser());
+            decrementRank(post.getUser());
             postLikeRepository.deleteByUserAndPost(user, post);
         } else
             throw new UserNotFoundException("PostLike is already deleted..");

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class PostCommentService {
 
         PostComment postComment = PostComment.builder()
                 .text(request.getText())
-                .createDate(LocalDate.now())
+                .createDate(LocalDateTime.now())
                 .user(user)
                 .post(post)
                 .build();
