@@ -2,17 +2,18 @@ package com.taahaagul.security.services;
 
 import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.entities.User;
+import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostRepository;
-import com.taahaagul.security.requests.PostCreateRequest;
 import com.taahaagul.security.responses.PostCommentResponse;
 import com.taahaagul.security.responses.PostLikeResponse;
 import com.taahaagul.security.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +24,31 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCommentService postCommentService;
     private final PostLikeService postLikeService;
+    private final S3Service s3Service;
 
-    public void createOnePost(PostCreateRequest request) {
+    public void createOnePost(Optional<String> text, Optional<MultipartFile> file) {
+
+        if(!text.isPresent() && !file.isPresent()) {
+            throw new UserNotFoundException("At least one of text or file must be provided.");
+        }
+
         User user = authenticationService.getCurrentUser();
+        String url = null;
 
-        Post post = Post.builder()
-                .text(request.getText())
+        if(file.isPresent()) {
+            url = s3Service.upload(file.get());
+        }
+
+        Post.PostBuilder postBuilder = Post.builder()
                 .createDate(LocalDateTime.now())
-                .user(user)
-                .build();
+                .user(user);
+
+        text.ifPresent(postBuilder::text);
+
+        if(url != null)
+            postBuilder.fileUrl(url);
+
+        Post post = postBuilder.build();
 
         postRepository.save(post);
     }

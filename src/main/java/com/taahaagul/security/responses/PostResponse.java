@@ -11,6 +11,7 @@ import java.util.List;
 public class PostResponse {
     private Long postId;
     private String text;
+    private String fileUrl;
     private LocalDateTime createDate;
     private Long userId;
     private String firstName;
@@ -23,6 +24,7 @@ public class PostResponse {
     public PostResponse(Post entity, List<PostCommentResponse> postComments, List<PostLikeResponse> postLikes) {
         this.postId = entity.getId();
         this.text = entity.getText();
+        this.fileUrl = entity.getFileUrl();
         this.createDate = entity.getCreateDate();
         this.userId = entity.getUser().getId();
         this.firstName = entity.getUser().getFirstName();

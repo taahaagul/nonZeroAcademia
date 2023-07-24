@@ -1,10 +1,8 @@
 package com.taahaagul.security.controllers;
 
 import com.taahaagul.security.entities.NonDaily;
-import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
-import com.taahaagul.security.requests.PostCreateRequest;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +13,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -133,8 +134,10 @@ public class nonZeroController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<String> createOnePost(@RequestBody PostCreateRequest request) {
-        postService.createOnePost(request);
+    public ResponseEntity<String> createOnePost(
+            @RequestParam(value = "text", required = false) String text,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        postService.createOnePost(Optional.ofNullable(text), Optional.ofNullable(file));
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Post created successfully");
     }

@@ -28,6 +28,8 @@ public class Post {
     @Column(columnDefinition = "text")
     String text;
 
+    String fileUrl;
+
     @Column(columnDefinition = "TIMESTAMP")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
