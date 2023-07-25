@@ -143,15 +143,28 @@ public class nonZeroController {
     }
 
     @GetMapping("/post")
-    public ResponseEntity<List<PostResponse>> getAllPost() {
+    public ResponseEntity<List<PostResponse>> getAllPost(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(postService.getAllPost());
+                .body(postService.getAllPost(page));
     }
 
     @GetMapping("/post/{userId}")
     public ResponseEntity<List<PostResponse>> getUserPost(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.getUserPost(userId));
+    }
+
+    @GetMapping("/{userId}/following/posts")
+    public ResponseEntity<Page<PostResponse>> getFallowingPosts
+            (@PathVariable Long userId,
+             @RequestParam(defaultValue = "0") int page,
+             @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<PostResponse> followingPosts = userService.getFollowingPosts(userId, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(followingPosts);
     }
 
     @PostMapping("/post-comment")
@@ -208,18 +221,6 @@ public class nonZeroController {
                 .body(userService.getFollowing(userId));
     }
 
-    @GetMapping("/{userId}/following/posts")
-    public ResponseEntity<Page<PostResponse>> getFallowingPosts
-            (@PathVariable Long userId,
-             @RequestParam(defaultValue = "0") int page,
-             @RequestParam(defaultValue = "50") int size) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
-        Page<PostResponse> followingPosts = userService.getFollowingPosts(userId, pageable);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(followingPosts);
-    }
 }
 
 

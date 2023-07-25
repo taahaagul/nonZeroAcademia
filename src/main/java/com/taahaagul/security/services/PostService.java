@@ -8,6 +8,10 @@ import com.taahaagul.security.responses.PostCommentResponse;
 import com.taahaagul.security.responses.PostLikeResponse;
 import com.taahaagul.security.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +31,6 @@ public class PostService {
     private final S3Service s3Service;
 
     public void createOnePost(Optional<String> text, Optional<MultipartFile> file) {
-
         if(!text.isPresent() && !file.isPresent()) {
             throw new UserNotFoundException("At least one of text or file must be provided.");
         }
@@ -38,23 +41,23 @@ public class PostService {
         if(file.isPresent()) {
             url = s3Service.upload(file.get());
         }
-
         Post.PostBuilder postBuilder = Post.builder()
                 .createDate(LocalDateTime.now())
                 .user(user);
 
         text.ifPresent(postBuilder::text);
-
         if(url != null)
             postBuilder.fileUrl(url);
 
         Post post = postBuilder.build();
-
         postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPost() {
-        List<Post> list = postRepository.findAll();
+    public List<PostResponse> getAllPost(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 50, Sort.by("createDate").descending());
+        Page<Post> page = postRepository.findAll(pageable);
+
+        List<Post> list = page.getContent();
         return list.stream()
                 .map(post -> {
                     List<PostCommentResponse> postComments = postCommentService.getAllPostComment(post.getId());
