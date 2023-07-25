@@ -31,7 +31,7 @@ public class UserService {
 
 
     public List<UserResponse> getAllUsers() {
-       List<User> list = userRepository.findAll();
+       List<User> list = userRepository.findAllByOrderByNonRankDesc();
        return list.stream()
                .map(user -> new UserResponse(user))
                .collect(Collectors.toList());
