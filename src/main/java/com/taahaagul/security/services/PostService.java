@@ -67,7 +67,7 @@ public class PostService {
     }
 
     public List<PostResponse> getUserPost(Long userId) {
-        List<Post> list = postRepository.findByUserId(userId);
+        List<Post> list = postRepository.findByUserIdOrderByCreateDateDesc(userId);
         return list.stream()
                 .map(post -> {
                     List<PostCommentResponse> postComments = postCommentService.getAllPostComment(post.getId());
