@@ -75,4 +75,16 @@ public class PostService {
                     return new PostResponse(post, postComments, postLikes);
                 }).collect(Collectors.toList());
     }
+
+    public List<PostResponse> getTrendPost() {
+        Pageable topFifty = PageRequest.of(0,50);
+        List<Post> list = postRepository.findTrendPosts(topFifty);
+
+        return list.stream()
+                .map(post -> {
+                    List<PostCommentResponse> postComments = postCommentService.getAllPostComment(post.getId());
+                    List<PostLikeResponse> postLikes = postLikeService.getAllPostLike(post.getId());
+                    return new PostResponse(post, postComments, postLikes);
+                }).collect(Collectors.toList());
+    }
 }

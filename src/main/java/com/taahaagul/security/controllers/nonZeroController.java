@@ -154,6 +154,12 @@ public class nonZeroController {
                 .body(postService.getUserPost(userId));
     }
 
+    @GetMapping("/post/trend")
+    public ResponseEntity<List<PostResponse>> getTrendPosts() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(postService.getTrendPost());
+    }
+
     @GetMapping("/{userId}/following/posts")
     public ResponseEntity<Page<PostResponse>> getFallowingPosts
             (@PathVariable Long userId,
@@ -220,7 +226,6 @@ public class nonZeroController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getFollowing(userId));
     }
-
 }
 
 

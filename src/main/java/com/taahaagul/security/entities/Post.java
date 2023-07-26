@@ -12,6 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -29,6 +31,10 @@ public class Post {
     String text;
 
     String fileUrl;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> likes = new ArrayList<>();
+
 
     @Column(columnDefinition = "TIMESTAMP")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
