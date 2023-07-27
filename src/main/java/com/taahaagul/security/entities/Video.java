@@ -34,3 +34,6 @@ public class Video {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Capsul capsul;
 }
+
+
+// The firstly u have to learn microservices architecture

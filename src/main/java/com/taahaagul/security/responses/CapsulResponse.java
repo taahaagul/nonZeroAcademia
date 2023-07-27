@@ -10,6 +10,7 @@ public class CapsulResponse {
     private String tutorName;
     private String price;
     private String title;
+    private String description;
     private String thumbnail;
 
     public CapsulResponse(Capsul entity) {
@@ -18,6 +19,7 @@ public class CapsulResponse {
         this.tutorName = entity.getTutorName();
         this.price = entity.getPrice();
         this.title = entity.getTitle();
+        this.description = entity.getDescription();
         this.thumbnail = entity.getThumbnail();
     }
 }

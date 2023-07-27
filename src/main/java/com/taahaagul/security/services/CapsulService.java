@@ -1,6 +1,7 @@
 package com.taahaagul.security.services;
 
 import com.taahaagul.security.entities.Capsul;
+import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.CapsulRepository;
 import com.taahaagul.security.requests.CapsulRequest;
 import com.taahaagul.security.responses.CapsulResponse;
@@ -29,9 +30,17 @@ public class CapsulService {
                 .tutorName(request.getTutorName())
                 .price(request.getPrice())
                 .title(request.getTitle())
+                .description(request.getDescription())
                 .thumbnail(request.getThumbnail())
                 .build();
 
         capsulRepository.save(capsul);
+    }
+
+    public CapsulResponse getOneCapsul(Integer capsulId) {
+        Capsul capsul = capsulRepository.findById(capsulId)
+                .orElseThrow(() -> new UserNotFoundException("Capsul is not founded"));
+
+        return new CapsulResponse(capsul);
     }
 }

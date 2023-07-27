@@ -62,6 +62,12 @@ public class nonZeroController {
                 .body(capsulService.getAllCapsul());
     }
 
+    @GetMapping("/capsul/{capsulId}")
+    public ResponseEntity<CapsulResponse> getOneCapsul(@PathVariable Integer capsulId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(capsulService.getOneCapsul(capsulId));
+    }
+
     @GetMapping("/section/{capsulId}")
     public ResponseEntity<List<SectionResponse>> getAllSection(@PathVariable Integer capsulId) {
         return ResponseEntity.status(HttpStatus.OK)

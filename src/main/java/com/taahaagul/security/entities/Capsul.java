@@ -20,6 +20,7 @@ public class Capsul {
     private Integer id;
     private String name;
     private String title;
+    private String description;
     private String thumbnail;
     private String tutorName;
     private String price;
