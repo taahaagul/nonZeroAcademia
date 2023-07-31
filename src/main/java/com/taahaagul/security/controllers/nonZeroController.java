@@ -198,11 +198,10 @@ public class nonZeroController {
                 .body("Updated postComment");
     }
 
-    @DeleteMapping("/{userId}/post-comment/{commentId}")
+    @DeleteMapping("/post-comment/{commentId}")
     public ResponseEntity<String> deletePostComment(
-            @PathVariable Long userId,
             @PathVariable Long commentId) {
-        postCommentService.deletePostComment(userId, commentId);
+        postCommentService.deletePostComment(commentId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("PostComment deleted successfully");
     }

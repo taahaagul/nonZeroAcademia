@@ -53,16 +53,19 @@ public class PostCommentService {
     }
 
     @Transactional
-    public void deletePostComment(Long userId, Long commentId) {
+    public void deletePostComment(Long commentId) {
         PostComment comment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new UserNotFoundException("postComment is not founded"));
 
-        if(!comment.getUser().getId().equals(userId))
+        User currentUser = authenticationService.getCurrentUser();
+
+        if(!comment.getUser().getId().equals(currentUser.getId()))
             throw new UserNotFoundException("User is not authorized to delete this comment");
 
         postCommentRepository.delete(comment);
     }
 
+    @Transactional
     public void updatePostComment(PostCommentPutRequest updateComment) {
         PostComment comment = postCommentRepository.findById(updateComment.getCommentId())
                 .orElseThrow(() -> new UserNotFoundException("PostComment is not founded"));
