@@ -3,6 +3,7 @@ package com.taahaagul.security.controllers;
 import com.taahaagul.security.entities.NonDaily;
 import com.taahaagul.security.requests.CommentCreateRequest;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
+import com.taahaagul.security.requests.PostCommentPutRequest;
 import com.taahaagul.security.responses.*;
 import com.taahaagul.security.services.*;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -185,6 +188,14 @@ public class nonZeroController {
         postCommentService.createOnePostComment(request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("PostComment created successfully");
+    }
+
+    @PutMapping("/post-comment")
+    public ResponseEntity<String> updatePostComment(
+            @RequestBody PostCommentPutRequest updateComment) {
+        postCommentService.updatePostComment(updateComment);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Updated postComment");
     }
 
     @DeleteMapping("/{userId}/post-comment/{commentId}")

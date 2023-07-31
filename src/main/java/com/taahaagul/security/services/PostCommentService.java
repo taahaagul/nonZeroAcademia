@@ -8,11 +8,13 @@ import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostCommentRepository;
 import com.taahaagul.security.repository.PostRepository;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
+import com.taahaagul.security.requests.PostCommentPutRequest;
 import com.taahaagul.security.responses.PostCommentResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,5 +61,18 @@ public class PostCommentService {
             throw new UserNotFoundException("User is not authorized to delete this comment");
 
         postCommentRepository.delete(comment);
+    }
+
+    public void updatePostComment(PostCommentPutRequest updateComment) {
+        PostComment comment = postCommentRepository.findById(updateComment.getCommentId())
+                .orElseThrow(() -> new UserNotFoundException("PostComment is not founded"));
+
+        User currentUser = authenticationService.getCurrentUser();
+
+        if (!comment.getUser().getId().equals(currentUser.getId()))
+            throw new UserNotFoundException("User is not authorized to update this comment");
+
+        comment.setText(updateComment.getText());
+        postCommentRepository.save(comment);
     }
 }
