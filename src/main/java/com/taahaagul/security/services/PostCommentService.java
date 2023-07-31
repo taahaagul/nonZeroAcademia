@@ -1,5 +1,6 @@
 package com.taahaagul.security.services;
 
+import com.taahaagul.security.entities.Comment;
 import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.entities.PostComment;
 import com.taahaagul.security.entities.User;
@@ -8,6 +9,7 @@ import com.taahaagul.security.repository.PostCommentRepository;
 import com.taahaagul.security.repository.PostRepository;
 import com.taahaagul.security.requests.PostCommentCreateRequest;
 import com.taahaagul.security.responses.PostCommentResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +48,13 @@ public class PostCommentService {
         return list.stream()
                 .map(postComment -> new PostCommentResponse(postComment))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deletePostComment(Long commentId) {
+        if (!postCommentRepository.existsById(commentId)) {
+            throw new UserNotFoundException("PostComment is not found");
+        }
+        postCommentRepository.deleteById(commentId);
     }
 }

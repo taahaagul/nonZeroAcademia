@@ -187,6 +187,13 @@ public class nonZeroController {
                 .body("PostComment created successfully");
     }
 
+    @DeleteMapping("/post-comment/{commentId}")
+    public ResponseEntity<String> deletePostComment(@PathVariable Long commentId) {
+        postCommentService.deletePostComment(commentId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("PostComment deleted successfully");
+    }
+
     @PostMapping("/post-like/{postId}")
     public ResponseEntity<String> createOnePostLike(@PathVariable Long postId) {
         postLikeService.createOnePostLike(postId);
