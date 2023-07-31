@@ -182,6 +182,14 @@ public class nonZeroController {
                 .body(followingPosts);
     }
 
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Post successfully deleted");
+    }
+
+
     @PostMapping("/post-comment")
     public ResponseEntity<String> createOnePostComment(
             @RequestBody PostCommentCreateRequest request) {
@@ -252,22 +260,3 @@ public class nonZeroController {
                 .body(userService.getFollowing(userId));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

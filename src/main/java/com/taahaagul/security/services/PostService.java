@@ -4,6 +4,7 @@ import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.entities.User;
 import com.taahaagul.security.exceptions.UserNotFoundException;
 import com.taahaagul.security.repository.PostRepository;
+import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.responses.PostCommentResponse;
 import com.taahaagul.security.responses.PostLikeResponse;
 import com.taahaagul.security.responses.PostResponse;
@@ -29,6 +30,7 @@ public class PostService {
     private final PostCommentService postCommentService;
     private final PostLikeService postLikeService;
     private final S3Service s3Service;
+    private final UserRepository userRepository;
 
     public void createOnePost(Optional<String> text, Optional<MultipartFile> file) {
         if(!text.isPresent() && !file.isPresent()) {
@@ -86,5 +88,22 @@ public class PostService {
                     List<PostLikeResponse> postLikes = postLikeService.getAllPostLike(post.getId());
                     return new PostResponse(post, postComments, postLikes);
                 }).collect(Collectors.toList());
+    }
+
+    public void deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new UserNotFoundException("Post is not founded"));
+
+        User currentUser = authenticationService.getCurrentUser();
+
+        if(!post.getUser().getId().equals(currentUser.getId()))
+            throw new UserNotFoundException("User is not authorized to delete this post");
+
+        int likeCount = post.getLikes().size();
+        int newRank = currentUser.getNonRank() - likeCount;
+        currentUser.setNonRank(newRank);
+
+        userRepository.save(currentUser);
+        postRepository.delete(post);
     }
 }
