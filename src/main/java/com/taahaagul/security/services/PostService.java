@@ -8,6 +8,7 @@ import com.taahaagul.security.repository.UserRepository;
 import com.taahaagul.security.responses.PostCommentResponse;
 import com.taahaagul.security.responses.PostLikeResponse;
 import com.taahaagul.security.responses.PostResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,6 +91,7 @@ public class PostService {
                 }).collect(Collectors.toList());
     }
 
+    @Transactional
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new UserNotFoundException("Post is not founded"));

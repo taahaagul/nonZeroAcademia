@@ -13,11 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +24,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/BATG/nonzero")
 @RequiredArgsConstructor
-public class nonZeroController {
+public class  nonZeroController {
 
     private final UserService userService;
     private final CapsulService capsulService;

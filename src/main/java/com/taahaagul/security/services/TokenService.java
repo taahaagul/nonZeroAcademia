@@ -13,7 +13,7 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
     public Integer getOnline() {
-        int activeUsers = tokenRepository.countActiveUsers(LocalDateTime.now().minusMinutes(1));
+        int activeUsers = tokenRepository.countActiveUsers(LocalDateTime.now().minusMinutes(60));
         return activeUsers;
     }
 }
