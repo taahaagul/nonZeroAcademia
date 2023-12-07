@@ -1,6 +1,5 @@
 package com.taahaagul.security.services;
 
-import com.taahaagul.security.entities.Comment;
 import com.taahaagul.security.entities.Post;
 import com.taahaagul.security.entities.PostComment;
 import com.taahaagul.security.entities.User;
