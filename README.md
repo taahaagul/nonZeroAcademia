@@ -19,3 +19,4 @@ nonZeroAcademia is a dynamic online learning platform designed to foster a colla
 - [MailSender]
 - [OpenAPI]
 - [AmazonS3]
+- [Sendbird]
