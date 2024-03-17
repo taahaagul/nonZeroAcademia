@@ -7,3 +7,15 @@ nonZeroAcademia is a dynamic online learning platform designed to foster a colla
 - Personalized Profiles: Create and manage customized profiles to showcase achievements and track progress within the platform.
 - Challenge: A healthy dose of competition is introduced through an achievement-based ranking system, motivating users to excel within their courses.
 - Social Features: Integrates elements of social media, fostering connections and engagement among users on the platform.
+
+### TECHNOLOGIES
+
+- [Spring Boot 3.0]
+- [Spring Security]
+- [JSON Web Tokens (JWT)]
+- [BCrypt]
+- [Maven]
+- [mySQL]
+- [MailSender]
+- [OpenAPI]
+- [AmazonS3]
